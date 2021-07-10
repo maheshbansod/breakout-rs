@@ -22,8 +22,9 @@ pub mod world {
             let bottom_margin = 20;
             let py = (vp.height() - paddle_height - bottom_margin) as i32;
             let paddle_speed = 10;
+            let bounds = (0, vp.width() as i32);
             World {
-                paddle: Paddle::new(px,py,paddle_width,paddle_height, paddle_speed),
+                paddle: Paddle::new(px,py,paddle_width,paddle_height, paddle_speed, bounds),
             }
         }
 

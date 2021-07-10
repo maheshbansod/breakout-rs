@@ -13,14 +13,15 @@ pub mod paddle {
         height: u32,
         y: i32,
         dir: i8,
+        bounds: (i32, i32),
         //Maybe add power ups too?
     }
 
     impl Paddle {
-        pub fn new(x: i32, y: i32, width: u32, height: u32, speed: u32) -> Paddle {
+        pub fn new(x: i32, y: i32, width: u32, height: u32, speed: u32, bounds: (i32, i32)) -> Paddle {
             let dir = 0;
             Paddle {
-                x, y, speed, width, height, dir
+                x, y, speed, width, height, dir, bounds
             }
         }
 
@@ -30,6 +31,12 @@ pub mod paddle {
 
         pub fn update(&mut self) {
             self.x += self.dir as i32 * self.speed as i32;
+
+            if self.bounds.0 > self.x {
+                self.x = self.bounds.0;
+            } else if self.bounds.1 < self.x+self.width as i32 {
+                self.x = self.bounds.1 - self.width as i32;
+            }
         }
 
         pub fn draw(&self, canvas: &mut Canvas) {

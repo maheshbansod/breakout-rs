@@ -25,6 +25,34 @@ pub mod paddle {
             }
         }
 
+        pub fn center_x(&self) -> i32 {
+            self.x + self.width as i32 / 2
+        }
+
+        pub fn y(&self) -> i32 {
+            self.y
+        }
+
+        pub fn width(&self) -> u32 {
+            self.width
+        }
+
+        pub fn upper_bound_x(&self) -> i32 {
+            self.x + self.width as i32
+        }
+
+        pub fn upper_bound_y(&self) -> i32 {
+            self.y + self.height as i32
+        }
+
+        pub fn lower_bound_x(&self) -> i32 {
+            self.x
+        }
+
+        pub fn lower_bound_y(&self) -> i32 {
+            self.y
+        }
+
         pub fn set_direction(&mut self, dir: i8) {
             self.dir = dir;
         }

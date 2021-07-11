@@ -63,6 +63,8 @@ pub mod world {
             use sdl2::keyboard::Scancode;
 
             let keyboard = event_pump.keyboard_state();
+            let mouse = event_pump.mouse_state();
+
             let go_left = keyboard.is_scancode_pressed(Scancode::A)
                 || keyboard.is_scancode_pressed(Scancode::Left);
             let go_right = keyboard.is_scancode_pressed(Scancode::D)
@@ -78,7 +80,8 @@ pub mod world {
                 self.paddle.set_direction(0);
             }
 
-            let tolaunch = keyboard.is_scancode_pressed(Scancode::Space);
+            let tolaunch = keyboard.is_scancode_pressed(Scancode::Space)
+                || mouse.left();
             if tolaunch && self.attached {
                 self.ball.launch();
                 self.attached = false;

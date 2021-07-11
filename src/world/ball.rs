@@ -109,11 +109,11 @@ mod ball {
 
         if x + r as i32 > ubx {
             Some(OutOfBounds::Right)
-        } else if x < lbx {
+        } else if (x - r as i32) < lbx {
             Some(OutOfBounds::Left)
         } else if y + r as i32 > uby {
             Some(OutOfBounds::Bottom)
-        } else if y < lby {
+        } else if (y - r as i32) < lby {
             Some(OutOfBounds::Top)
         } else {
             None

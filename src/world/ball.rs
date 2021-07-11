@@ -5,6 +5,7 @@ mod ball {
     type Bounds = (i32, i32, u32, u32);
     type Canvas = sdl2::render::Canvas<sdl2::video::Window>;
     use sdl2::rect::Rect;
+    use sdl2::rect::Point;
     use sdl2::pixels::Color;
 
     use crate::world::paddle::Paddle;
@@ -95,6 +96,34 @@ mod ball {
             let y = self.y - self.radius as i32;
             let size = 2*self.radius;
             canvas.fill_rect(Rect::new(x, y, size, size)).unwrap();
+
+            if self.dx != 0.0 || self.dy != 0.0 {
+                
+                let cx = self.x as f32;
+                let cy = self.y as f32;
+                let r = self.radius as f32;
+                let theta = self.dy.atan2(-self.dx);//TODO
+                let cos_theta = f32::cos(theta);
+                let sin_theta = f32::sin(theta);
+
+                let st_p1x = cx + r * (4.0*cos_theta - sin_theta/2.0);
+                let st_p1y = cy - r * (4.0 * sin_theta - cos_theta/2.0);
+                let end_p1x = st_p1x + 4.0*r*cos_theta;
+                let end_p1y = st_p1y - 4.0*r*sin_theta;
+
+                let st_p2x = cx + r * (4.0*cos_theta + sin_theta/2.0);
+                let st_p2y = cy - r * (4.0 * sin_theta + cos_theta/2.0);
+                let end_p2x = st_p2x + 4.0*r*cos_theta;
+                let end_p2y = st_p2y - 4.0*r*sin_theta;
+
+                canvas.set_draw_color(Color::RGB(50,50,50));
+
+                canvas.draw_line(Point::new(st_p1x as i32, st_p1y as i32),
+                    Point::new(end_p1x as i32, end_p1y as i32)).unwrap();
+
+                canvas.draw_line(Point::new(st_p2x as i32, st_p2y as i32),
+                    Point::new(end_p2x as i32, end_p2y as i32)).unwrap();
+            }
         }
     }
 

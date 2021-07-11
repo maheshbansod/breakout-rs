@@ -4,6 +4,7 @@ pub use paddle::Paddle;
 pub mod paddle {
     type Canvas = sdl2::render::Canvas<sdl2::video::Window>;
     use sdl2::rect::Rect;
+    use sdl2::rect::Point;
     use sdl2::pixels::Color;
 
     pub struct Paddle {
@@ -69,7 +70,31 @@ pub mod paddle {
 
         pub fn draw(&self, canvas: &mut Canvas) {
             canvas.set_draw_color(Color::RGB(200,200,200));
-            canvas.fill_rect(Rect::new(self.x, self.y, self.width, self.height)).unwrap();
+            // canvas.fill_rect(Rect::new(self.x, self.y, self.width, self.height)).unwrap();
+            canvas.set_draw_color(Color::RGB(0,0,0));
+            canvas.draw_rect(Rect::new(self.x, self.y, self.width, self.height)).unwrap();
+
+            if self.dir != 0 {
+                for i in 1..=3 {
+                    let f = if self.dir > 0 {
+                        -i
+                    } else {
+                        i
+                    };
+                    let mut st = self.x;
+                    if self.dir < 0 {
+                        st += self.width() as i32;
+                    }
+
+                    let points = [Point::new(st + f*20, self.y),
+                        Point::new(st + f*30,self.y + self.height as i32/3),
+                        Point::new(st + f*30,self.y + 2*self.height as i32/3),
+                        Point::new(st + f*20,self.y + self.height as i32)];
+
+                    canvas.draw_lines(&points[..]).unwrap();
+                }
+            }
+
         }
     }
 }

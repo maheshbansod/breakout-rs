@@ -63,8 +63,10 @@ pub mod world {
             use sdl2::keyboard::Scancode;
 
             let keyboard = event_pump.keyboard_state();
-            let go_left = keyboard.is_scancode_pressed(Scancode::A);
-            let go_right = keyboard.is_scancode_pressed(Scancode::D);
+            let go_left = keyboard.is_scancode_pressed(Scancode::A)
+                || keyboard.is_scancode_pressed(Scancode::Left);
+            let go_right = keyboard.is_scancode_pressed(Scancode::D)
+                || keyboard.is_scancode_pressed(Scancode::Right);
 
             if !(go_right && go_left) && (go_left || go_right){
                 self.paddle.set_direction(if go_right {

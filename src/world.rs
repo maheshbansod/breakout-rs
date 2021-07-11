@@ -2,12 +2,16 @@
 
 mod paddle;
 mod ball;
+mod level;
+mod map;
 
 pub use world::World;
 
 pub mod world {
     use super::paddle::Paddle;
     use super::ball::Ball;
+    use super::level::Level;
+    use super::map::Map;
     type Canvas = sdl2::render::Canvas<sdl2::video::Window>;
     use sdl2::EventPump;
 
@@ -15,6 +19,9 @@ pub mod world {
         paddle: Paddle,
         ball: Ball,
         attached: bool,
+        lives: u32,
+        levels: Vec<Level>,
+        current_level: u32,
     }
 
     impl World {
@@ -35,10 +42,25 @@ pub mod world {
             let ball_speed = 10;
             let bbounds = (0, 0, vp.width(), vp.height());
 
+            /*load levels from file later?*/
+            let mut levels = Vec::new();
+            const M: usize = 7;
+            const N: usize = 10;
+            let mut bricks: [i32; M*N] = [0; M*N];
+            for i in 0..M*N {
+                bricks[i] = (i%3) as i32;
+            }
+            // let bwidth = vp.width()/N as u32;
+            // let bheight = vp.height()/(3*M as u32);
+            levels.push(Level::new(Map::new(bricks, vp.width(), vp.height()/3)));
+
             World {
                 paddle: Paddle::new(px,py,paddle_width,paddle_height, paddle_speed, pbounds),
                 ball: Ball::new(bx, by, bradius, 0.0, 0.0, ball_speed, bbounds),
                 attached: true,
+                lives: 3,
+                levels: levels,
+                current_level: 1,
             }
         }
 
@@ -55,6 +77,7 @@ pub mod world {
         }
 
         pub(crate) fn draw(&self, canvas: &mut Canvas) {
+            self.levels[(self.current_level-1) as usize].draw(canvas);
             self.paddle.draw(canvas);
             self.ball.draw(canvas);
         }

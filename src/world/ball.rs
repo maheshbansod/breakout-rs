@@ -9,6 +9,7 @@ mod ball {
     use sdl2::pixels::Color;
 
     use crate::world::paddle::Paddle;
+    use crate::world::map::Map;
 
     pub struct Ball {
         x: i32,
@@ -34,6 +35,16 @@ mod ball {
             Ball {
                 x, y, dx, dy, speed, radius, bounds,
             }
+        }
+
+        pub fn x(&self) -> i32 {
+            self.x
+        }
+        pub fn y(&self) -> i32 {
+            self.y
+        }
+        pub fn radius(&self) -> u32 {
+            self.radius
         }
 
         pub fn update(&mut self) {
@@ -77,6 +88,23 @@ mod ball {
 
             ((blbx > lbx && blbx < ubx) || (bubx > lbx && bubx < ubx))
              && ((blby > lby && blby < uby) || (buby > lby && buby < uby))
+        }
+
+        pub fn handle_collision_with_brick(&mut self, map: &mut Map) -> () {
+            if let Some(collision_status) = map.check_collision_with_ball(&self) {
+                match collision_status {
+                    1 => {
+                        //vertical
+                        self.dy = -self.dy;
+                    },
+                    2 => {
+                        //horizontal
+                        self.dx = -self.dx;
+                    },
+                    _ => {},
+                }
+                ;
+            }
         }
 
         pub fn bounce_back(&mut self, paddle: &Paddle) {

@@ -17,6 +17,10 @@ pub mod level {
             }
         }
 
+        pub fn map_mutable(&mut self) -> &mut Map {
+            &mut self.map
+        }
+
         pub fn draw(&self, canvas: &mut Canvas) {
 
             self.map.draw(canvas);

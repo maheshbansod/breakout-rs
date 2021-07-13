@@ -52,7 +52,7 @@ pub mod world {
             }
             // let bwidth = vp.width()/N as u32;
             // let bheight = vp.height()/(3*M as u32);
-            levels.push(Level::new(Map::new(bricks, vp.width(), vp.height()/3)));
+            levels.push(Level::new(Map::new(bricks, vp.width(), vp.height()/3, 10, 10)));
 
             World {
                 paddle: Paddle::new(px,py,paddle_width,paddle_height, paddle_speed, pbounds),
@@ -72,6 +72,8 @@ pub mod world {
             } else if self.ball.collides_with(&self.paddle) {
                 self.ball.bounce_back(&self.paddle);
             }
+            
+            self.ball.handle_collision_with_brick(self.levels[(self.current_level - 1) as usize].map_mutable());
 
             self.ball.update();
         }

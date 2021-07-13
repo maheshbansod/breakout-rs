@@ -64,19 +64,17 @@ mod map {
             //now check up, down, left and right
 
             //TODO: FIX THIS
-            if i - 1 >= 0 && i < M as i32 && j >= 0 && j < N as i32 { // up
+            if i - 1 >= 0 && i - 1 < M as i32 && j >= 0 && j < N as i32 { // up
                 if y as u32 - radius < self.marginy + (i as u32)*bsheight { //upper one is sus
                     let i = i-1;
                     let brick = &mut self.map[i as usize*N + j as usize];
-                    println!("about to kill");
                     if *brick > 0 {
-                        println!("im killa, killing {}, i={}", *brick, i);
                         *brick -= 1;
                         return Some(1); //vertical hit
                     }
                 }
             }
-            if j - 1 >= 0 && i >= 0 && i < M as i32 { //left
+            if j - 1 >= 0 && j - 1 < N as i32 && i >= 0 && i < M as i32 { //left
                 if x as u32 - radius < self.marginx+(j as u32 )*bswidth { //left one is sus
                     let j = j-1;
                     let brick = &mut self.map[i as usize*N + j as usize];

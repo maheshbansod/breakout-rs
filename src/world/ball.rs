@@ -20,6 +20,7 @@ mod ball {
         radius: u32,
 
         bounds: Bounds,
+        hasdied: bool,
     }
 
     enum OutOfBounds {
@@ -32,8 +33,9 @@ mod ball {
     impl Ball {
         pub fn new(x: i32, y: i32, radius: u32, dx: f32, dy: f32,
             speed: u32, bounds: Bounds) -> Ball {
+            let hasdied = false;
             Ball {
-                x, y, dx, dy, speed, radius, bounds,
+                x, y, dx, dy, speed, radius, bounds, hasdied
             }
         }
 
@@ -47,6 +49,14 @@ mod ball {
             self.radius
         }
 
+        pub fn has_died(&self) -> bool {
+            self.hasdied
+        }
+
+        pub fn revive(&mut self) {
+            self.hasdied = false;
+        }
+
         pub fn update(&mut self) {
             let x = (self.x as f32 + self.dx * self.speed as f32) as i32;
             let y = (self.y as f32 + self.dy * self.speed as f32) as i32;
@@ -58,6 +68,7 @@ mod ball {
                     },
                     OutOfBounds::Top | OutOfBounds::Bottom => {
                         self.dy = -self.dy;
+                        self.hasdied = true;
                     }
                 }
             } else {

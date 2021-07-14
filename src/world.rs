@@ -81,6 +81,19 @@ pub mod world {
             self.ball.handle_collision_with_brick(self.levels[(self.current_level - 1) as usize].map_mutable());
 
             self.ball.update();
+
+            if self.ball.has_died() {
+                self.lives -= 1;
+                if self.lives > 0 {
+                    self.attached = true;
+                    self.ball.revive();
+                } else {
+                    //game over
+                    println!("game over");
+                    self.ball.revive(); //dont revive when game over implemented
+                    self.lives = 1;
+                }
+            }
         }
 
         pub(crate) fn draw(&self, canvas: &mut Canvas) {

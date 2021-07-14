@@ -2,6 +2,10 @@
 pub use map::Map;
 
 mod map {
+
+    use std::fs::File;
+    use std::io::{BufReader, Read};
+
     type Canvas = sdl2::render::Canvas<sdl2::video::Window>;
     use sdl2::rect::Rect;
     use sdl2::pixels::Color;
@@ -40,6 +44,34 @@ mod map {
                 marginy: marginy,
                 brick_margin: 2,
             }
+        }
+
+        pub fn from_file(filename: String, width: u32, height: u32, marginx: u32, marginy: u32) -> Result<Map, String> {
+            let mut data = String::new();
+            let f = File::open(filename);
+            if let Err(_e) = f {
+                return Err(String::from("Unable to open file"));
+            }
+            let f = f.unwrap();
+            let mut br = BufReader::new(f);
+            br.read_to_string(&mut data).expect("Unable to read string from file");
+
+            let mut map = [0; M*N];
+            data.split(" ").filter_map(|number| {
+                match number.parse::<i32>() {
+                    Ok(number) => Some(number),
+                    Err(_) => None
+                }
+            }).zip(map.iter_mut())
+                .for_each(|(b, df)| *df = b);
+            
+            Ok(Map::new(
+                map,
+                width,
+                height,
+                marginx,
+                marginy
+            ))
         }
 
         pub fn check_collision_with_ball(&mut self, ball: &Ball) -> Option<u32> {

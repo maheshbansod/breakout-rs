@@ -44,15 +44,20 @@ pub mod world {
 
             /*load levels from file later?*/
             let mut levels = Vec::new();
-            const M: usize = 7;
-            const N: usize = 10;
-            let mut bricks: [i32; M*N] = [0; M*N];
-            for i in 0..M*N {
-                bricks[i] = (i%3) as i32;
-            }
+            // const M: usize = 7;
+            // const N: usize = 10;
+            // let mut bricks: [i32; M*N] = [0; M*N];
+            // for i in 0..M*N {
+            //     bricks[i] = (i%3) as i32;
+            // }
             // let bwidth = vp.width()/N as u32;
             // let bheight = vp.height()/(3*M as u32);
-            levels.push(Level::new(Map::new(bricks, vp.width(), vp.height()/3, 10, 10)));
+            let paths = std::fs::read_dir("./lvls/").unwrap();
+            for path in paths {
+                levels.push(Level::new(Map::from_file( path.unwrap().path().to_str().unwrap().to_string(),
+                    vp.width(), vp.height()/3, 10, 10).unwrap()));
+            }
+            // levels.push(Level::new(Map::new(bricks, vp.width(), vp.height()/3, 10, 10)));
 
             World {
                 paddle: Paddle::new(px,py,paddle_width,paddle_height, paddle_speed, pbounds),

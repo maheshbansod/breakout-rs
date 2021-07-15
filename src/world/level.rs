@@ -21,6 +21,10 @@ pub mod level {
             &mut self.map
         }
 
+        pub fn is_complete(&self) -> bool {
+            self.map.is_empty()
+        }
+
         pub fn draw(&self, canvas: &mut Canvas) {
 
             self.map.draw(canvas);

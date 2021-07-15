@@ -74,6 +74,10 @@ mod map {
             ))
         }
 
+        pub fn is_empty(&self) -> bool {
+            !self.map.iter().any(|x| *x>0 )
+        }
+
         pub fn check_collision_with_ball(&mut self, ball: &Ball) -> Option<u32> {
             let x = ball.x();
             let y = ball.y();

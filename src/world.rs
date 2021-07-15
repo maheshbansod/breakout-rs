@@ -42,22 +42,14 @@ pub mod world {
             let ball_speed = 10;
             let bbounds = (0, 0, vp.width(), vp.height());
 
-            /*load levels from file later?*/
             let mut levels = Vec::new();
-            // const M: usize = 7;
-            // const N: usize = 10;
-            // let mut bricks: [i32; M*N] = [0; M*N];
-            // for i in 0..M*N {
-            //     bricks[i] = (i%3) as i32;
-            // }
-            // let bwidth = vp.width()/N as u32;
-            // let bheight = vp.height()/(3*M as u32);
-            let paths = std::fs::read_dir("./lvls/").unwrap();
+
+            let mut paths: Vec<_> = std::fs::read_dir("./lvls/").unwrap().map(|r| r.unwrap()).collect();
+            paths.sort_by_key(|dir| dir.path());
             for path in paths {
-                levels.push(Level::new(Map::from_file( path.unwrap().path().to_str().unwrap().to_string(),
+                levels.push(Level::new(Map::from_file( path.path().to_str().unwrap().to_string(),
                     vp.width(), vp.height()/3, 10, 10).unwrap()));
             }
-            // levels.push(Level::new(Map::new(bricks, vp.width(), vp.height()/3, 10, 10)));
 
             World {
                 paddle: Paddle::new(px,py,paddle_width,paddle_height, paddle_speed, pbounds),
@@ -78,7 +70,17 @@ pub mod world {
                 self.ball.bounce_back(&self.paddle);
             }
             
-            self.ball.handle_collision_with_brick(self.levels[(self.current_level - 1) as usize].map_mutable());
+            if self.ball.handle_collision_with_brick(self.levels[(self.current_level - 1) as usize].map_mutable()) {
+                if self.levels[(self.current_level - 1) as usize].is_complete() {
+                    if self.levels.len() > self.current_level as usize {
+                        println!("You've completed level {}! Congratulations! ^_^", self.current_level);
+                        self.current_level += 1;
+                        self.attached = true;
+                    } else {
+                        println!("You've completed the game!!");
+                    }
+                }
+            }
 
             self.ball.update();
 

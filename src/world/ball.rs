@@ -66,7 +66,10 @@ mod ball {
                     OutOfBounds::Left | OutOfBounds::Right => {
                         self.dx = -self.dx;
                     },
-                    OutOfBounds::Top | OutOfBounds::Bottom => {
+                    OutOfBounds::Top => {
+                        self.dy = -self.dy;
+                    },
+                    OutOfBounds::Bottom => {
                         self.dy = -self.dy;
                         self.hasdied = true;
                     }
@@ -101,20 +104,25 @@ mod ball {
              && ((blby > lby && blby < uby) || (buby > lby && buby < uby))
         }
 
-        pub fn handle_collision_with_brick(&mut self, map: &mut Map) -> () {
+        pub fn handle_collision_with_brick(&mut self, map: &mut Map) -> bool {
             if let Some(collision_status) = map.check_collision_with_ball(&self) {
                 match collision_status {
                     1 => {
                         //vertical
                         self.dy = -self.dy;
+                        true
                     },
                     2 => {
                         //horizontal
                         self.dx = -self.dx;
+                        true
                     },
-                    _ => {},
+                    _ => {
+                        false
+                    },
                 }
-                ;
+            } else {
+                false
             }
         }
 
